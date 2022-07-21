@@ -24,7 +24,13 @@ public class Ball : MonoBehaviour
             case EBallType.blue:
                 gameObject.GetComponent<Renderer>().material = materials[2];
                 break;
-                default:
+            case EBallType.yellow:
+                gameObject.GetComponent<Renderer>().material = materials[3];
+                break;
+            case EBallType.orange:
+                gameObject.GetComponent<Renderer>().material = materials[4];
+                break;
+            default:
                 print("Dd");
                 break;
         }
@@ -34,6 +40,11 @@ public class Ball : MonoBehaviour
         if (transform.position.z > 0 || transform.position.z < 0)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ThisType((EBallType)Random.Range(0,5));
         }
     }
     private void OnMouseDown()

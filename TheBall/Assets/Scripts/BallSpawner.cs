@@ -6,10 +6,12 @@ public enum EBallType
     red,
     green,
     blue,
+    yellow,
+    orange
 }
 public class BallSpawner : MonoBehaviour
 {
-    const int MAX_BALL = 180;
+    const int MAX_BALL = 50;
     [SerializeField] Ball ball;
 
     Stack<Ball> balls = new Stack<Ball>();
@@ -34,8 +36,8 @@ public class BallSpawner : MonoBehaviour
             Ball theBall = balls.Pop();
             theBall.gameObject.SetActive(true);
             theBall.transform.parent = null;
-            theBall.GetComponent<Rigidbody>().AddForce(new Vector2(-100, 100));
-            theBall.ThisType((EBallType)Random.Range(0, 3));
+            theBall.GetComponent<Rigidbody>().AddForce(new Vector2(Random.Range(-200, -50), 100));
+            theBall.ThisType((EBallType)Random.Range(0, 5));
 
             if(i == MAX_BALL -1) Time.timeScale = 1;
         }
@@ -48,7 +50,7 @@ public class BallSpawner : MonoBehaviour
             Ball theBall = balls.Pop();
             theBall.gameObject.SetActive(true);
             theBall.transform.parent = null;
-            theBall.GetComponent<Rigidbody>().AddForce(new Vector2(-500, 100));
+            theBall.GetComponent<Rigidbody>().AddForce(new Vector2(Random.Range(-200,-50), 100));
             theBall.ThisType((EBallType)Random.Range(0, 3));
         }
     }
