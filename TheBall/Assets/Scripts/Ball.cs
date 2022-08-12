@@ -9,6 +9,8 @@ public class Ball : MonoBehaviour
     EBallType type;
     [SerializeField] private List<Ball> aroundBall = new List<Ball>();
     private bool isTrue;
+    Rigidbody rb => GetComponent<Rigidbody>();
+    private BallSpawner ballSpawner => GameObject.Find("BallSpawner").GetComponent<BallSpawner>();
     public void ThisType(EBallType ballType)
     {
         type = ballType;
@@ -44,7 +46,9 @@ public class Ball : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            ThisType((EBallType)Random.Range(0,5));
+            print("D");
+            rb.AddForce(new Vector2(Random.Range(-500,500), 500));
+            //ThisType((EBallType)Random.Range(0,5));
         }
     }
     private void OnMouseDown()
@@ -87,6 +91,12 @@ public class Ball : MonoBehaviour
         if (collision.collider.CompareTag("Ball"))
         {
             aroundBall.Add(collision.gameObject.GetComponent<Ball>());
+        }
+
+        if (collision.collider.CompareTag("CollectionBox"))
+        {
+            ballSpawner.Push(this.GetComponent<Ball>());
+            StartCoroutine(ballSpawner.Pop());
         }
     }
     private void OnCollisionExit(Collision collision)

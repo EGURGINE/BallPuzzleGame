@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
             {
                 spawner.Push(item);
             }
-            spawner.StartCoroutine(spawner.Pop());
+            StartCoroutine(spawner.Pop());
 
         }
     }

@@ -51,7 +51,7 @@ public class BallSpawner : MonoBehaviour
             theBall.gameObject.SetActive(true);
             theBall.transform.parent = null;
             theBall.GetComponent<Rigidbody>().AddForce(new Vector2(Random.Range(-200,-50), 100));
-            theBall.ThisType((EBallType)Random.Range(0, 3));
+            theBall.ThisType((EBallType)Random.Range(0, 5));
         }
     }
 
