@@ -5,55 +5,42 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] Material[] materials;
     EBallType type;
+    [SerializeField] Material[] materials;
     [SerializeField] private List<Ball> aroundBall = new List<Ball>();
     private bool isTrue;
     Rigidbody rb => GetComponent<Rigidbody>();
     private BallSpawner ballSpawner => GameObject.Find("BallSpawner").GetComponent<BallSpawner>();
+
+    public ParticleSystem pc;
+
+    private void Start()
+    {
+        pc.Stop();
+    }
     public void ThisType(EBallType ballType)
     {
+        pc.Stop();
         type = ballType;
-
-        switch (type)
-        {
-            case EBallType.red:
-                gameObject.GetComponent<Renderer>().material = materials[0];
-                break;
-            case EBallType.green:
-                gameObject.GetComponent<Renderer>().material = materials[1];
-                break;
-            case EBallType.blue:
-                gameObject.GetComponent<Renderer>().material = materials[2];
-                break;
-            case EBallType.yellow:
-                gameObject.GetComponent<Renderer>().material = materials[3];
-                break;
-            case EBallType.orange:
-                gameObject.GetComponent<Renderer>().material = materials[4];
-                break;
-            default:
-                print("Dd");
-                break;
-        }
+        isTrue = false;
+        gameObject.GetComponent<Renderer>().material = materials[(int)type];
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (transform.position.z > 0 || transform.position.z < 0)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            print("D");
-            rb.AddForce(new Vector2(Random.Range(-500,500), 500));
-            //ThisType((EBallType)Random.Range(0,5));
-        }
+    }
+    public void ShakeBall()
+    {
+        rb.AddForce(new Vector2(Random.Range(-500, 500), 500));
     }
     private void OnMouseDown()
     {
-        GameManager.Instance.selectBalls.Add(this);
+        GameManager.Instance.selectBalls.Add(this); 
+        pc.Play();
+
     }
     private void OnMouseEnter()
     {
@@ -68,20 +55,23 @@ public class Ball : MonoBehaviour
         }
         foreach (var item in GameManager.Instance.selectBalls[GameManager.Instance.selectBalls.Count - 1].aroundBall)
         {
-            if (item == this)
+            if (item == this && GameManager.Instance.selectBalls[
+                GameManager.Instance.selectBalls.Count - 1].type == this.type)
             {
                 isTrue = true;
             }
         }
 
-        if (GameManager.Instance.selectBalls[GameManager.Instance.selectBalls.Count - 1]. type == this.type && isTrue)
+        if (isTrue)
         {
             GameManager.Instance.selectBalls.Add(this);
+            pc.Play();
         }
         else return;
     }
     private void OnMouseUp()
     {
+        
         GameManager.Instance.ScoreCnt();
         GameManager.Instance.selectBalls.Clear();
     }
@@ -91,12 +81,6 @@ public class Ball : MonoBehaviour
         if (collision.collider.CompareTag("Ball"))
         {
             aroundBall.Add(collision.gameObject.GetComponent<Ball>());
-        }
-
-        if (collision.collider.CompareTag("CollectionBox"))
-        {
-            ballSpawner.Push(this.GetComponent<Ball>());
-            StartCoroutine(ballSpawner.Pop());
         }
     }
     private void OnCollisionExit(Collision collision)

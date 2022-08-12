@@ -11,17 +11,34 @@ public enum EBallType
 }
 public class BallSpawner : MonoBehaviour
 {
+    #region ΩÃ±€≈Ê
+    private static BallSpawner instance;
+
+    public static BallSpawner Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<BallSpawner>();
+            }
+            return instance;
+        }
+    }
+    #endregion
     const int MAX_BALL = 50;
     [SerializeField] Ball ball;
-
+    public List<Ball> allBalls = new List<Ball>();
     Stack<Ball> balls = new Stack<Ball>();
 
     private void Start()
     {
+        instance = this;
         Time.timeScale = 100;
         for (int i = 0; i < MAX_BALL; i++)
         {
             Ball theBall = Instantiate(ball);
+            allBalls.Add(theBall);
             balls.Push(theBall);
             theBall.transform.position = transform.position;
             theBall.transform.parent = transform;
@@ -39,7 +56,11 @@ public class BallSpawner : MonoBehaviour
             theBall.GetComponent<Rigidbody>().AddForce(new Vector2(Random.Range(-200, -50), 100));
             theBall.ThisType((EBallType)Random.Range(0, 5));
 
-            if(i == MAX_BALL -1) Time.timeScale = 1;
+            if (i == MAX_BALL - 1)
+            {
+                Time.timeScale = 1;
+                GameManager.Instance.isGameStart = true;
+            }
         }
     }
     public IEnumerator Pop()
