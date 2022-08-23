@@ -6,7 +6,7 @@ public enum EBallType
     red,
     green,
     blue,
-    yellow,
+    puple,
     orange
 }
 public class BallSpawner : MonoBehaviour

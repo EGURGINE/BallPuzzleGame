@@ -12,15 +12,15 @@ public class Ball : MonoBehaviour
     Rigidbody rb => GetComponent<Rigidbody>();
     private BallSpawner ballSpawner => GameObject.Find("BallSpawner").GetComponent<BallSpawner>();
 
-    public ParticleSystem pc;
+    public Light lightObj;
 
     private void Start()
     {
-        pc.Stop();
+        lightObj.gameObject.SetActive(false);
     }
     public void ThisType(EBallType ballType)
     {
-        pc.Stop();
+        lightObj.gameObject.SetActive(false);
         type = ballType;
         isTrue = false;
         gameObject.GetComponent<Renderer>().material = materials[(int)type];
@@ -38,8 +38,8 @@ public class Ball : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        GameManager.Instance.selectBalls.Add(this); 
-        pc.Play();
+        GameManager.Instance.selectBalls.Add(this);
+        lightObj.gameObject.SetActive(true);
 
     }
     private void OnMouseEnter()
@@ -65,7 +65,7 @@ public class Ball : MonoBehaviour
         if (isTrue)
         {
             GameManager.Instance.selectBalls.Add(this);
-            pc.Play();
+            lightObj.gameObject.SetActive(true);
         }
         else return;
     }
@@ -88,6 +88,7 @@ public class Ball : MonoBehaviour
         if (collision.collider.CompareTag("Ball"))
         {
             aroundBall.Remove(collision.gameObject.GetComponent<Ball>());
+            print("dma");
         }
     }
 }

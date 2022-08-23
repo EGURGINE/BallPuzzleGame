@@ -43,7 +43,8 @@ public class GameManager : MonoBehaviour
         set 
         { 
             inGameTime = value;
-            TimeCalculation(inGameTime);
+            if(inGameTime == 0) GameOver();
+            else TimeCalculation(timerCnt - inGameTime);
         }
     }
     public int Score
@@ -85,7 +86,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (var item in selectBalls)
         {
-            item.pc.Stop();
+           item.lightObj.gameObject.SetActive(false);
         }
         if (selectBalls.Count > 3)
         {
@@ -105,21 +106,22 @@ public class GameManager : MonoBehaviour
     private void Timer()
     {
         InGameTime += Time.deltaTime;
-        if(inGameTime >= timerCnt)
-        {
-            GameOver();
-        }
     }
-    
     private void TimeCalculation(float _time) 
     {
         timerSec = (int)_time;
 
-        if (timerSec - (60 * timerMin) > 60)
+        if (timerSec > 120)
         {
-            timerMin++;
-            timerSec = _time - (60 * timerMin);
+            timerMin = 2;
+            timerSec -= 120;
         }
+        else if (timerSec > 60)
+        {
+            timerMin = 1;
+            timerSec -= 60;
+        }
+        else timerMin = 0;
 
 
         if (timerSec > 9) timeTxt.text = $"{timerMin} : {timerSec}";
